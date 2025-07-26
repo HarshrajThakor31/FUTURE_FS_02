@@ -1,8 +1,8 @@
-# 🍕 Pizza Ecommerce Website - Full Stack Application
+# 🛒 ShopMe Ecommerce Website - Full Stack Application
 
 ## Project Structure
 ```
-Project-Pizza-Website/
+ShopMe-Website/
 ├── shopme-backend/         # Node.js + Express + PostgreSQL (ShopMe Backend)
 ├── shopme-frontend/        # React + Tailwind CSS (ShopMe Frontend)
 ├── START_BACKEND.bat       # Start backend server
@@ -33,11 +33,11 @@ npm start
 ✅ **Separated Projects** - Independent frontend and backend  
 ✅ **Neon PostgreSQL** - Cloud database with your connection  
 ✅ **Authentication** - Login/Register with JWT tokens  
-✅ **Pizza Catalog** - Auto-seeded pizza catalog with descriptions and stock  
+✅ **Product Catalog** - Auto-seeded product catalog with descriptions and stock  
 ✅ **Shopping Cart** - Add/remove items, quantity management  
 ✅ **Order System** - Place orders, order history, order tracking  
 ✅ **Stock Management** - Real-time inventory tracking  
-✅ **Search Functionality** - Search pizzas by name or description  
+✅ **Search Functionality** - Search products by name or description  
 ✅ **CORS Enabled** - Frontend can call backend APIs  
 ✅ **Responsive Design** - Mobile-friendly ecommerce theme  
 
