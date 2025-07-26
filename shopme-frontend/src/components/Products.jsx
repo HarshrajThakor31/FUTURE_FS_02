@@ -44,7 +44,13 @@ const Products = () => {
           <div className="text-center py-8">Loading products...</div>
         ) : (
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
-            {products.map((product) => (
+            {products.sort((a, b) => {
+              const aHasImage = a.image && a.image.startsWith('https://');
+              const bHasImage = b.image && b.image.startsWith('https://');
+              if (aHasImage && !bHasImage) return -1;
+              if (!aHasImage && bHasImage) return 1;
+              return 0;
+            }).map((product) => (
             <div key={product.id} className="bg-white rounded-2xl p-6 text-center shadow-lg hover:shadow-xl transition-shadow">
               <img src={product.image} alt={product.name} className="w-32 h-32 mx-auto mb-4" />
               

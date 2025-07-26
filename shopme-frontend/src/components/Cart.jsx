@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
+import config from '../config';
 
 const Cart = ({ isOpen, onClose }) => {
   const { items, loading, updateCartItem, removeFromCart, getCartTotal } = useCart();
@@ -114,7 +115,7 @@ const CheckoutForm = ({ onClose, onSuccess }) => {
     
     try {
       console.log('Placing order with data:', formData);
-      const response = await fetch('http://localhost:8001/api/orders/create', {
+      const response = await fetch(`${config.API_URL}/api/orders/create`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

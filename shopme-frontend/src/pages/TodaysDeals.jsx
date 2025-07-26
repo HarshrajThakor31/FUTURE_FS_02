@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import ExtraordinaryHeader from '../components/ExtraordinaryHeader';
+import MobileHeader from '../components/MobileHeader';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
+import { useIsMobile } from '../hooks/useIsMobile';
 import axios from 'axios';
 
 const TodaysDeals = () => {
@@ -9,6 +11,7 @@ const TodaysDeals = () => {
   const [timeLeft, setTimeLeft] = useState({ hours: 12, minutes: 34, seconds: 56 });
   const { addToCart } = useCart();
   const { user } = useAuth();
+  const isMobile = useIsMobile();
 
   useEffect(() => {
     fetchDeals();
@@ -25,7 +28,8 @@ const TodaysDeals = () => {
 
   const fetchDeals = async () => {
     try {
-      const response = await axios.get('http://localhost:8001/api/products');
+      const { API_ENDPOINTS } = require('../utils/api');
+      const response = await axios.get(API_ENDPOINTS.PRODUCTS);
       const dealsData = response.data.slice(0, 8).map(item => ({
         ...item,
         originalPrice: item.price + 5,
@@ -48,7 +52,7 @@ const TodaysDeals = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-red-50 to-orange-50">
-      <ExtraordinaryHeader />
+      {isMobile ? <MobileHeader /> : <ExtraordinaryHeader />}
       
       {/* Hero Section */}
       <div className="bg-gradient-to-r from-red-500 to-orange-500 text-white py-16">
@@ -78,15 +82,15 @@ const TodaysDeals = () => {
       </div>
 
       {/* Deals Grid */}
-      <div className="container mx-auto px-4 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="mobile-container py-2 md:py-12">
+        <div className="mobile-grid">
           {deals.map((deal) => (
-            <div key={deal.id} className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1 overflow-hidden">
+            <div key={deal.id} className="bg-white rounded shadow hover:shadow-md transition-all overflow-hidden">
               <div className="relative">
                 <img 
                   src={deal.image} 
                   alt={deal.name} 
-                  className="w-full h-48 object-cover"
+                  className="w-full h-16 md:h-48 object-cover"
                   onError={(e) => {
                     e.target.src = `https://via.placeholder.com/400x300/EF4444/FFFFFF?text=${encodeURIComponent(deal.name)}`;
                   }}
@@ -99,16 +103,16 @@ const TodaysDeals = () => {
                 </div>
               </div>
               
-              <div className="p-4">
-                <h3 className="font-bold text-lg mb-2 line-clamp-2">{deal.name}</h3>
-                <p className="text-gray-600 text-sm mb-3 line-clamp-2">{deal.description}</p>
+              <div className="p-1 md:p-4">
+                <h3 className="font-bold text-xs md:text-lg mb-1 md:mb-2">{isMobile ? deal.name.substring(0, 15) + '...' : deal.name}</h3>
+                <p className="hidden md:block text-gray-600 text-sm mb-3">{deal.description}</p>
                 
                 <div className="flex items-center gap-2 mb-3">
-                  <span className="text-2xl font-bold text-red-500">${deal.price}</span>
+                  <span className="text-sm md:text-2xl font-bold text-red-500">${deal.price}</span>
                   <span className="text-gray-400 line-through">${deal.originalPrice}</span>
                 </div>
                 
-                <div className="flex items-center mb-3">
+                <div className="hidden md:flex items-center mb-3">
                   <div className="flex text-yellow-400">★★★★☆</div>
                   <span className="text-gray-500 text-sm ml-2">(89)</span>
                 </div>
@@ -116,7 +120,7 @@ const TodaysDeals = () => {
                 <button
                   onClick={() => handleAddToCart(deal)}
                   disabled={deal.stock_quantity === 0}
-                  className="w-full bg-gradient-to-r from-red-500 to-orange-500 text-white py-2 px-4 rounded-lg font-semibold hover:from-red-600 hover:to-orange-600 transition-all disabled:bg-gray-300"
+                  className="w-full bg-red-500 text-white py-1 px-1 md:py-2 md:px-4 rounded font-semibold disabled:bg-gray-300 text-xs md:text-base"
                 >
                   {deal.stock_quantity === 0 ? 'Sold Out' : 'Grab Deal Now!'}
                 </button>

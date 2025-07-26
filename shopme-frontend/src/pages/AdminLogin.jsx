@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import ExtraordinaryHeader from '../components/ExtraordinaryHeader';
+import config from '../config';
 
 const AdminLogin = () => {
   const [email, setEmail] = useState('');
@@ -17,7 +18,7 @@ const AdminLogin = () => {
     setLoading(true);
     
     try {
-      const response = await fetch('http://localhost:8001/api/simple-admin/login', {
+      const response = await fetch(`${config.API_URL}/api/simple-admin/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password })

@@ -52,4 +52,14 @@ router.post('/login', async (req, res) => {
   }
 });
 
+// Google OAuth Login (placeholder)
+router.post('/google', async (req, res) => {
+  try {
+    // For now, return error since Google OAuth is not fully implemented
+    res.status(501).json({ message: 'Google OAuth not implemented yet' });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
 module.exports = router;

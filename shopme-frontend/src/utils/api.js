@@ -1,6 +1,6 @@
-const API_BASE_URL = process.env.NODE_ENV === 'production' 
-  ? 'https://shopme-backend.vercel.app' 
-  : 'http://localhost:8001';
+import config from '../config';
+
+const API_BASE_URL = config.API_URL;
 
 export const API_ENDPOINTS = {
   // Auth

@@ -35,6 +35,12 @@ const createTables = async () => {
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       )
     `);
+    
+    // Add role column if it doesn't exist (migration)
+    await pool.query(`
+      ALTER TABLE users 
+      ADD COLUMN IF NOT EXISTS role VARCHAR(50) DEFAULT 'user'
+    `);
 
     // Drop old pizzas table and create new products table
     await pool.query('DROP TABLE IF EXISTS order_items CASCADE');

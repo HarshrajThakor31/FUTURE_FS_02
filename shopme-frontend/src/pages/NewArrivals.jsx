@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import ExtraordinaryHeader from '../components/ExtraordinaryHeader';
+import MobileHeader from '../components/MobileHeader';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
+import { useIsMobile } from '../hooks/useIsMobile';
 import axios from 'axios';
 
 const NewArrivals = () => {
@@ -9,6 +11,7 @@ const NewArrivals = () => {
   const [selectedCategory, setSelectedCategory] = useState('all');
   const { addToCart } = useCart();
   const { user } = useAuth();
+  const isMobile = useIsMobile();
 
   useEffect(() => {
     fetchProducts();
@@ -16,7 +19,8 @@ const NewArrivals = () => {
 
   const fetchProducts = async () => {
     try {
-      const response = await axios.get('http://localhost:8001/api/products');
+      const { API_ENDPOINTS } = require('../utils/api');
+      const response = await axios.get(API_ENDPOINTS.PRODUCTS);
       const newArrivals = response.data.map(item => ({
         ...item,
         isNew: true,
@@ -50,7 +54,7 @@ const NewArrivals = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 to-teal-50">
-      <ExtraordinaryHeader />
+      {isMobile ? <MobileHeader /> : <ExtraordinaryHeader />}
       
       {/* Hero Section */}
       <div className="bg-gradient-to-r from-green-600 to-teal-600 text-white py-16">
@@ -78,7 +82,7 @@ const NewArrivals = () => {
       </div>
 
       {/* Timeline View */}
-      <div className="container mx-auto px-4 py-12">
+      <div className="mobile-container py-2 md:py-12">
         <div className="relative">
           {/* Timeline Line */}
           <div className="absolute left-1/2 transform -translate-x-1/2 w-1 bg-gradient-to-b from-green-400 to-teal-400 h-full"></div>
@@ -89,10 +93,10 @@ const NewArrivals = () => {
               <div className="absolute left-1/2 transform -translate-x-1/2 w-6 h-6 bg-green-500 rounded-full border-4 border-white shadow-lg z-10"></div>
               
               {/* Product Card */}
-              <div className={`w-5/12 ${index % 2 === 0 ? 'pr-8' : 'pl-8'}`}>
-                <div className="bg-white rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 overflow-hidden">
+              <div className={`w-full md:w-5/12 ${!isMobile && index % 2 === 0 ? 'md:pr-8' : !isMobile ? 'md:pl-8' : ''}`}>
+                <div className="bg-white rounded shadow hover:shadow-md transition-all overflow-hidden mb-4 md:mb-0">
                   <div className="relative">
-                    <img src={product.image} alt={product.name} className="w-full h-48 object-cover" />
+                    <img src={product.image} alt={product.name} className="w-full h-24 md:h-48 object-cover" />
                     
                     {/* New Badge */}
                     <div className="absolute top-3 left-3 bg-gradient-to-r from-green-400 to-teal-400 text-white px-3 py-1 rounded-full text-sm font-bold animate-pulse">
@@ -106,23 +110,23 @@ const NewArrivals = () => {
                     )}
                   </div>
                   
-                  <div className="p-6">
+                  <div className="p-2 md:p-6">
                     <div className="text-sm text-green-600 font-medium mb-2">
                       Added {getDaysAgo(product.arrivalDate)}
                     </div>
                     
-                    <h3 className="font-bold text-xl mb-2">{product.name}</h3>
-                    <p className="text-gray-600 text-sm mb-4">{product.description}</p>
+                    <h3 className="font-bold text-sm md:text-xl mb-1 md:mb-2">{isMobile ? product.name.substring(0, 20) + '...' : product.name}</h3>
+                    <p className="hidden md:block text-gray-600 text-sm mb-4">{product.description}</p>
                     
                     <div className="flex items-center justify-between mb-4">
-                      <span className="text-2xl font-bold text-green-600">${product.price}</span>
+                      <span className="text-sm md:text-2xl font-bold text-green-600">${product.price}</span>
                       <div className="text-sm text-gray-500">Stock: {product.stock_quantity}</div>
                     </div>
                     
                     <button
                       onClick={() => handleAddToCart(product)}
                       disabled={product.stock_quantity === 0}
-                      className="w-full bg-gradient-to-r from-green-500 to-teal-500 text-white py-3 px-4 rounded-xl font-semibold hover:from-green-600 hover:to-teal-600 transition-all disabled:bg-gray-300"
+                      className="w-full bg-green-500 text-white py-1 px-2 md:py-3 md:px-4 rounded font-semibold disabled:bg-gray-300 text-xs md:text-base"
                     >
                       {product.preOrder ? 'Pre-Order Now' : product.stock_quantity === 0 ? 'Out of Stock' : 'Add to Cart'}
                     </button>

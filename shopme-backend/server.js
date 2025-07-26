@@ -12,8 +12,11 @@ const PORT = process.env.PORT || 8001;
 app.use(cors({
   origin: [
     'http://localhost:3000',
-    'https://shopme-frontend-bppxtviro-harshrajthakor31s-projects.vercel.app',
-    'https://shopme-frontend-harshrajthakor31s-projects.vercel.app'
+    /^https:\/\/shopme-frontend-.*-harshrajthakor31s-projects\.vercel\.app$/,
+    'https://shopme-frontend-harshrajthakor31s-projects.vercel.app',
+    /^https:\/\/shopme-frontend-.*\.vercel\.app$/,
+    'https://shopme-app-2024.vercel.app',
+    /^https:\/\/.*\.vercel\.app$/
   ],
   credentials: true
 }));
@@ -27,6 +30,7 @@ app.use('/api/orders', require('./routes/orders'));
 
 app.use('/api/reviews', require('./routes/reviews'));
 app.use('/api/coupons', require('./routes/coupons'));
+app.use('/api/wishlist', require('./routes/wishlist'));
 app.use('/api/simple-admin', require('./routes/simple-admin'));
 
 // Basic route

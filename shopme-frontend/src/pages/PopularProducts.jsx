@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import ExtraordinaryHeader from '../components/ExtraordinaryHeader';
+import MobileHeader from '../components/MobileHeader';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
+import { useIsMobile } from '../hooks/useIsMobile';
 import axios from 'axios';
 
 const PopularProducts = () => {
@@ -9,6 +11,7 @@ const PopularProducts = () => {
   const [filter, setFilter] = useState('all');
   const { addToCart } = useCart();
   const { user } = useAuth();
+  const isMobile = useIsMobile();
 
   useEffect(() => {
     fetchProducts();
@@ -16,7 +19,8 @@ const PopularProducts = () => {
 
   const fetchProducts = async () => {
     try {
-      const response = await axios.get('http://localhost:8001/api/products');
+      const { API_ENDPOINTS } = require('../utils/api');
+      const response = await axios.get(API_ENDPOINTS.PRODUCTS);
       const popularData = response.data.map(item => ({
         ...item,
         popularity: Math.floor(Math.random() * 1000) + 500,
@@ -45,7 +49,7 @@ const PopularProducts = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50">
-      <ExtraordinaryHeader />
+      {isMobile ? <MobileHeader /> : <ExtraordinaryHeader />}
       
       {/* Hero Section */}
       <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white py-16">
@@ -79,12 +83,18 @@ const PopularProducts = () => {
       </div>
 
       {/* Products Grid */}
-      <div className="container mx-auto px-4 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-          {filteredProducts.map((product, index) => (
-            <div key={product.id} className="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden group">
+      <div className="px-1 md:px-4 py-2 md:py-12">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-1 md:gap-8">
+          {filteredProducts.sort((a, b) => {
+            const aHasImage = a.image && a.image.startsWith('https://');
+            const bHasImage = b.image && b.image.startsWith('https://');
+            if (aHasImage && !bHasImage) return -1;
+            if (!aHasImage && bHasImage) return 1;
+            return 0;
+          }).map((product, index) => (
+            <div key={product.id} className="bg-white rounded shadow hover:shadow-md transition-all overflow-hidden group">
               <div className="relative">
-                <img src={product.image} alt={product.name} className="w-full h-56 object-cover group-hover:scale-105 transition-transform duration-300" />
+                <img src={product.image} alt={product.name} className="w-full h-16 md:h-56 object-cover" />
                 
                 {/* Badges */}
                 <div className="absolute top-3 left-3 flex flex-col gap-2">
@@ -106,24 +116,24 @@ const PopularProducts = () => {
                 </div>
               </div>
               
-              <div className="p-6">
-                <h3 className="font-bold text-xl mb-2 line-clamp-2">{product.name}</h3>
-                <p className="text-gray-600 text-sm mb-4 line-clamp-2">{product.description}</p>
+              <div className="p-1 md:p-6">
+                <h3 className="font-bold text-xs md:text-xl mb-1 md:mb-2">{isMobile ? product.name.substring(0, 15) + '...' : product.name}</h3>
+                <p className="hidden md:block text-gray-600 text-sm mb-4">{product.description}</p>
                 
-                <div className="flex items-center mb-4">
+                <div className="hidden md:flex items-center mb-4">
                   <div className="flex text-yellow-400 text-lg">★★★★★</div>
                   <span className="text-gray-500 text-sm ml-2">({product.popularity})</span>
                 </div>
                 
-                <div className="flex items-center justify-between mb-4">
-                  <span className="text-3xl font-bold text-blue-600">${product.price}</span>
-                  <div className="text-sm text-gray-500">Stock: {product.stock_quantity}</div>
+                <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-2 md:mb-4">
+                  <span className="text-sm md:text-3xl font-bold text-blue-600">${product.price}</span>
+                  <div className="hidden md:block text-sm text-gray-500">Stock: {product.stock_quantity}</div>
                 </div>
                 
                 <button
                   onClick={() => handleAddToCart(product)}
                   disabled={product.stock_quantity === 0}
-                  className="w-full bg-gradient-to-r from-blue-500 to-purple-500 text-white py-3 px-4 rounded-xl font-semibold hover:from-blue-600 hover:to-purple-600 transition-all transform hover:scale-105 disabled:bg-gray-300"
+                  className="w-full bg-blue-500 text-white py-1 px-2 md:py-3 md:px-4 rounded font-semibold disabled:bg-gray-300 text-xs md:text-base"
                 >
                   {product.stock_quantity === 0 ? 'Out of Stock' : 'Add to Cart'}
                 </button>

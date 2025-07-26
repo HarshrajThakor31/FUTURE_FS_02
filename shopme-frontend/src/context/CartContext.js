@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useReducer, useEffect } from 'react';
 import axios from 'axios';
 import { useAuth } from './AuthContext';
+import config from '../config';
 
 const CartContext = createContext();
 
@@ -30,7 +31,7 @@ export const CartProvider = ({ children }) => {
     
     try {
       dispatch({ type: 'SET_LOADING', payload: true });
-      const response = await axios.get('http://localhost:8001/api/cart', {
+      const response = await axios.get(`${config.API_URL}/api/cart`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       dispatch({ type: 'SET_CART', payload: response.data });
@@ -47,7 +48,7 @@ export const CartProvider = ({ children }) => {
     }
     
     try {
-      const response = await axios.post('http://localhost:8001/api/cart/add', 
+      const response = await axios.post(`${config.API_URL}/api/cart/add`, 
         { product_id: productId, quantity },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -67,7 +68,7 @@ export const CartProvider = ({ children }) => {
     }
     
     try {
-      await axios.put(`http://localhost:8001/api/cart/update/${cartId}`,
+      await axios.put(`${config.API_URL}/api/cart/update/${cartId}`,
         { quantity },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -81,7 +82,7 @@ export const CartProvider = ({ children }) => {
     if (!token) return;
     
     try {
-      await axios.delete(`http://localhost:8001/api/cart/remove/${cartId}`,
+      await axios.delete(`${config.API_URL}/api/cart/remove/${cartId}`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
       await fetchCart();
@@ -94,7 +95,7 @@ export const CartProvider = ({ children }) => {
     if (!token) return;
     
     try {
-      await axios.delete('http://localhost:8001/api/cart/clear',
+      await axios.delete(`${config.API_URL}/api/cart/clear`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
       dispatch({ type: 'CLEAR_CART' });

@@ -16,7 +16,7 @@ const Search = () => {
     
     setLoading(true);
     try {
-      const response = await axios.get(`http://localhost:8001/api/pizzas/search/${query}`);
+      const response = await axios.get(`https://shopme-backend.vercel.app/api/pizzas/search/${query}`);
       setResults(response.data);
     } catch (error) {
       console.error('Error searching pizzas:', error);

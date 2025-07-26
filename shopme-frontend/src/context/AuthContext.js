@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import axios from 'axios';
+import config from '../config';
 
 const AuthContext = createContext();
 
@@ -35,7 +36,7 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   const login = async (email, password) => {
-    const response = await axios.post('http://localhost:8001/api/auth/login', { email, password });
+    const response = await axios.post(`${config.API_URL}/api/auth/login`, { email, password });
     const { token: authToken, user } = response.data;
     localStorage.setItem('token', authToken);
     axios.defaults.headers.common['Authorization'] = `Bearer ${authToken}`;
@@ -45,7 +46,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   const register = async (name, email, password) => {
-    const response = await axios.post('http://localhost:8001/api/auth/register', { name, email, password });
+    const response = await axios.post(`${config.API_URL}/api/auth/register`, { name, email, password });
     const { token: authToken, user } = response.data;
     localStorage.setItem('token', authToken);
     axios.defaults.headers.common['Authorization'] = `Bearer ${authToken}`;
@@ -55,7 +56,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   const googleLogin = async (googleToken) => {
-    const response = await axios.post('http://localhost:8001/api/auth/google', { token: googleToken });
+    const response = await axios.post(`${config.API_URL}/api/auth/google`, { token: googleToken });
     const { token: jwtToken, user } = response.data;
     localStorage.setItem('token', jwtToken);
     axios.defaults.headers.common['Authorization'] = `Bearer ${jwtToken}`;

@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useReducer, useEffect } from 'react';
 import axios from 'axios';
 import { useAuth } from './AuthContext';
+import config from '../config';
 
 const WishlistContext = createContext();
 
@@ -33,7 +34,7 @@ export const WishlistProvider = ({ children }) => {
     
     try {
       dispatch({ type: 'SET_LOADING', payload: true });
-      const response = await axios.get('http://localhost:8001/api/wishlist', {
+      const response = await axios.get(`${config.API_URL}/api/wishlist`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       dispatch({ type: 'SET_WISHLIST', payload: response.data || [] });
@@ -47,7 +48,7 @@ export const WishlistProvider = ({ children }) => {
     if (!token) return;
     
     try {
-      await axios.post('http://localhost:8001/api/wishlist/add', 
+      await axios.post(`${config.API_URL}/api/wishlist/add`, 
         { product_id: productId },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -61,7 +62,7 @@ export const WishlistProvider = ({ children }) => {
     if (!token) return;
     
     try {
-      await axios.delete(`http://localhost:8001/api/wishlist/remove/${productId}`,
+      await axios.delete(`${config.API_URL}/api/wishlist/remove/${productId}`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
       await fetchWishlist();

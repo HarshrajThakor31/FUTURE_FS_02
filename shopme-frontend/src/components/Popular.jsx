@@ -19,7 +19,7 @@ const Popular = () => {
 
   const fetchPopularPizzas = async () => {
     try {
-      const response = await axios.get('http://localhost:8001/api/pizzas/category/popular');
+      const response = await axios.get('https://shopme-backend.vercel.app/api/pizzas/category/popular');
       setPopularPizzas(response.data);
     } catch (error) {
       console.error('Error fetching popular pizzas:', error);
@@ -66,7 +66,13 @@ const Popular = () => {
               }}
               className="pt-16"
             >
-              {popularPizzas.map((pizza) => (
+              {popularPizzas.sort((a, b) => {
+                const aHasImage = a.image && a.image.startsWith('https://');
+                const bHasImage = b.image && b.image.startsWith('https://');
+                if (aHasImage && !bHasImage) return -1;
+                if (!aHasImage && bHasImage) return 1;
+                return 0;
+              }).map((pizza) => (
                 <SwiperSlide key={pizza.id}>
                   <div className="bg-white rounded-2xl p-6 text-center shadow-lg hover:shadow-xl transition-shadow">
                     <img src={pizza.image} alt={pizza.name} className="w-32 h-32 mx-auto mb-4" />

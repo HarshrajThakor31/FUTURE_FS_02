@@ -22,13 +22,21 @@ const Sidebar = ({ onFilterChange }) => {
       : [...selectedCategories, categoryId];
     
     setSelectedCategories(updated);
-    onFilterChange({ categories: updated, priceRange });
   };
 
   const handlePriceRangeChange = (min, max) => {
     const newPriceRange = [min, max];
     setPriceRange(newPriceRange);
-    onFilterChange({ categories: selectedCategories, priceRange: newPriceRange });
+  };
+
+  const applyFilters = () => {
+    onFilterChange({ categories: selectedCategories, priceRange });
+  };
+
+  const clearFilters = () => {
+    setSelectedCategories([]);
+    setPriceRange([0, 50]);
+    onFilterChange({ categories: [], priceRange: [0, 50] });
   };
 
   return (
@@ -101,17 +109,13 @@ const Sidebar = ({ onFilterChange }) => {
       {/* Filter Actions */}
       <div className="flex gap-2">
         <button 
-          onClick={() => onFilterChange({ categories: selectedCategories, priceRange })}
+          onClick={applyFilters}
           className="flex-1 bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 transition-colors"
         >
           Apply Filters
         </button>
         <button 
-          onClick={() => {
-            setSelectedCategories([]);
-            setPriceRange([0, 50]);
-            onFilterChange({ categories: [], priceRange: [0, 50] });
-          }}
+          onClick={clearFilters}
           className="flex-1 bg-gray-300 text-gray-700 py-2 px-4 rounded hover:bg-gray-400 transition-colors"
         >
           Clear
