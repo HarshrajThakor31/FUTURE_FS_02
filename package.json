@@ -1,0 +1,15 @@
+{
+  "name": "shopme-ecommerce",
+  "version": "1.0.0",
+  "description": "Full-stack ecommerce platform with React and Node.js",
+  "scripts": {
+    "dev": "concurrently \"npm run backend\" \"npm run frontend\"",
+    "backend": "cd shopme-backend && npm start",
+    "frontend": "cd shopme-frontend && npm start",
+    "build": "cd shopme-frontend && npm run build",
+    "install-all": "cd shopme-backend && npm install && cd ../shopme-frontend && npm install"
+  },
+  "keywords": ["ecommerce", "react", "nodejs", "postgresql"],
+  "author": "Your Name",
+  "license": "MIT"
+}
