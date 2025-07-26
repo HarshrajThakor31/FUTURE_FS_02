@@ -1,4 +1,4 @@
-# 🍕 Pizza Ecommerce Website - Full Stack Application
+# 🍕Ecommerce Website - Full Stack Application
 
 ## Project Structure
 ```
